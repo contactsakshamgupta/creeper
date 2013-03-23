@@ -1,0 +1,451 @@
+
+
+class File
+{       private:
+	void sysFileadd(char nm[]);
+	int listdisp();
+	void create();
+	void oldFile();
+	void funclist(char fnm1[], char fnm[] ,int t);
+	void open(char fnm1[], char fnm[]);
+	void Filerename(char fnm1[], int t);
+	void Filedelete(char fnm1[], char fnm[],int t);
+	void Fileprint(char fnm1[], char fnm[],int t);
+
+	public:
+	 File();
+};
+
+File::File()
+{
+
+	int i,v;
+
+	do{
+	textbackground(WHITE);
+	textcolor(GREEN);
+	_setcursortype(_NORMALCURSOR);
+	clrscr();
+	for(i=2;i<20;++i)
+	{
+		box(75,i,4,4);
+		delay(50);
+		box(75,i,4,4,int(' '));
+	}
+	box(75,20,4,4);
+	 delay(50);
+		gotoxy(29,6);
+		textcolor(WHITE);
+		cputs(">>> CREEPER FILE EXPERT >>>");
+		textcolor(GREEN);
+		gotoxy(5,12);
+		cputs("1. CREATE NEW FILE");
+		gotoxy(5,14);
+		cputs("2. LIST ALL FILES");
+		gotoxy(5,16);
+		cputs("0. RETURN");
+		gotoxy(5,18);
+		cputs("ENTER THE CHOICE NUMBER : ");
+		v=int(getche()-48);
+		delay(100);
+		if(v)
+		{ switch(v)
+		 {
+			case 1:
+			      create();
+			      break;
+			case 2:
+				oldFile();
+				break;
+			default:
+
+				gotoxy(55,22);
+				cputs("INVALID ENTRY");
+				delay(1000);
+				break;
+
+		 }}
+	}while(v!=0);
+
+}
+
+
+
+
+
+
+
+void File::sysFileadd(char nm[])
+{
+	int v;
+	fstream f("c:/creeper/sys/File/total",ios::in);
+	if(!f)
+		v=0;
+	else
+	{	f>>v;  }
+	v++;
+	f.close();
+	f.open("c:/creeper/sys/File/total",ios::out);
+	f<<v;
+	f.close();
+	f.open("c:/creeper/sys/File/list",ios::app);
+	f<<nm<<"\n";
+}
+
+int File::listdisp()
+{	int v;
+	char fnm[80];
+	ifstream f("c:/creeper/sys/File/total");
+	if(!f)
+	{
+		cout<<"NO FILE FOUND";
+		return 0;
+	}
+	f>>v;
+	f.close();
+	f.open("c:/creeper/sys/File/list");
+	if(!f)
+	{
+		cout<<"SYSTEM ERROR OR NO FILE FOUND";
+		return -1;
+	}
+	if(v==0)
+	{
+		cout<<"NO FILE FOUND";
+		return 0;
+	}
+	for(int i=1 ; i<=v;++i)
+	{
+		f.getline(fnm,80);
+		cout<<i<<" "<<fnm<<endl;
+	}
+	f.close();
+	return v;
+}
+
+void File::create()
+{
+	char nm[50],fnm[80]="c:/creeper/File/",ln[100];
+	ofstream f;
+	textbackground(BLUE);
+	textcolor(RED);
+	_setcursortype(_NORMALCURSOR);
+	clrscr();
+	gotoxy(4,3);
+	cout<<">>> TXT CREEPER <<<\n\n";
+	textcolor(WHITE);
+	cputs("FILE NAME: ");
+	gets(nm);
+	strcat(fnm,nm);
+	f.open(fnm);
+	if(!f)
+	{
+		cout<<"\n\n\t\t\tFILE CAN NOT BE CREATED....";
+		delay(500);
+		return;
+	}
+	for(int i = 0; i<80; ++i)
+	cputs("*");
+	cout<<"\t\t\t";
+	cputs("WORKSPACE");
+	gotoxy(2,8);
+	textcolor(GREEN);
+	cputs("PRESS RETURN KEY TWICE TO SAVE FILE AND END CREEPING FILE");
+	cout<<endl<<endl;
+	gets(ln);
+	while(ln[0]!='\0')
+	{
+		f<<ln<<"\n";
+		gets(ln);
+	}
+	cout<<"\n\n\t\t";
+	cputs("FILE SAVED");
+	delay(800);
+	sysFileadd(nm);
+	f.close();
+}
+
+void File::oldFile()
+{
+	int tot,v;
+	char ch;
+	char fnm[80],fnm1[80]="c:/creeper/File/" ;
+	textbackground(BLUE);
+	textcolor(GREEN);
+	_setcursortype(_NORMALCURSOR);
+	clrscr();
+	cout<<"\n\t\tLIST \n";
+	cout<<"0 RETURN\n";
+	tot=listdisp();
+	cout<<"\n\n\tENTER YOUR CHOICE: ";
+	ch=getche();
+	v=ch-48;
+	if(v<0||v>tot)
+	{
+		cout<<"INVALID CHOICE";
+		delay(500);
+		return;
+
+	}
+	if(v==0)
+		return;
+	ifstream f("c:/creeper/sys/File/list");
+	for(int i=1;i<=v;++i)
+	{
+		f.getline(fnm,80);
+	}
+	f.close();
+	strcat(fnm1,fnm);
+	funclist(fnm1,fnm,v);
+
+}
+
+void File::funclist(char fnm1[],char fnm[],int t)
+{
+
+	int i,v;
+
+	do{
+	textbackground(BLUE);
+	textcolor(GREEN);
+	_setcursortype(_NORMALCURSOR);
+	clrscr();
+	for(i=2;i<75;++i)
+	{
+		box(i,20,4,4);
+		delay(20);
+		box(i,20,4,4,int(' '));
+	}
+	box(75,20,4,4);
+	 delay(50);
+		gotoxy(29,6);
+		textcolor(WHITE);
+		cputs(">>> CREEPER FILE EXPERT BOX>>>");
+		textcolor(GREEN);
+		gotoxy(5,10);
+		cputs("1. OPEN");
+		gotoxy(5,12);
+		cputs("2. RENAME");
+		gotoxy(5,14);
+		cputs("3. DELETE");
+		gotoxy(5,16);
+		cputs("4. PRINT");
+		gotoxy(5,18);
+		cputs("0. RETURN");
+		gotoxy(5,20);
+		cputs("ENTER THE CHOICE NUMBER : ");
+		v=int(getche()-48);
+		delay(100);
+		if(v)
+		{ switch(v)
+		 {
+			case 1:
+			      open(fnm1,fnm);
+			      break;
+			case 2:
+				Filerename(fnm1,t);
+				break;
+			case 3: Filedelete(fnm1,fnm,t);
+				return;
+			case 4:
+				Fileprint(fnm1,fnm,t);
+				break;
+
+			default:
+
+				gotoxy(55,22);
+				cputs("INVALID ENTRY");
+				delay(1000);
+				break;
+
+		 }}
+	}while(v!=0);
+
+}
+
+
+void File::open(char fnm1[], char fnm[])
+{
+	textbackground(BLUE);
+	textcolor(GREEN);
+	clrscr();
+	char ch;
+
+	ifstream f(fnm1);
+	if(!f)
+	{
+		cout<<"error with File";
+		delay(500);
+		return;
+	}
+	f.get(ch);
+	cout<<"\n\t\t\t"<<fnm<<endl<<endl;
+	while(f)
+	{
+		for(int i=0; i<8;++i)
+		{
+		textcolor(i);
+		cputs("°");
+		delay(30);
+		cputs("\b \b");
+		}
+		cout<<ch;
+		f.get(ch);
+	}
+	cout<<"\n\nPRESS ANY KEY TO CREEP ON...";
+	f.close();
+	getch();
+
+}
+
+void File::Filerename(char fnm1[],  int t)
+{
+	textbackground(BLUE);
+	textcolor(GREEN);
+	_setcursortype(_NORMALCURSOR);
+	clrscr();
+	char nm[80],nm1[120]="c:/creeper/File/" ;
+
+	gotoxy(35,5);
+	cout<<"NEW NAME : "<<endl;
+	gotoxy(35,8);
+	gets(nm);
+	strcat(nm1,nm);
+	rename(fnm1,nm1);
+	ifstream f1("c:/creeper/sys/File/list");
+	ofstream f2("c:/creeper/sys/File/temp");
+	if(!f1||!f2)
+	{
+		cout<<"error.....";
+		getch();
+		return;
+	}
+	int i=0;
+	char temp[80];
+	f1.getline(temp,80);
+	while(f1)
+	{
+		i++;
+		if(i==t)
+		{
+		    f2<<nm<<"\n";
+		}
+		else
+		{f2<<temp<<"\n";  }
+		f1.getline(temp,80);
+	}
+	f1.close();
+	f2.close();
+	remove("c:/creeper/sys/File/list");
+	rename("c:/creeper/sys/File/temp","c:/creeper/sys/File/list");
+}
+
+
+void File::Filedelete(char fnm1[],char fnm[] ,int t)
+{
+
+
+	textbackground(BLUE);
+	textcolor(GREEN);
+	_setcursortype(_NOCURSOR);
+	clrscr();
+	char ans;
+	gotoxy(2,2);
+	cout<<"ARE YOU SURE YOU WANT TO DELETE "<<fnm<<" Y/N :";
+	gotoxy(10,4);
+	cin>>ans;
+	if(ans=='n' || ans=='N')
+		return;
+
+	 remove(fnm1);
+	ifstream f1("c:/creeper/sys/File/list");
+	ofstream f2("c:/creeper/sys/File/temp");
+	if(!f1||!f2)
+	{
+		cout<<"error.....";
+		getch();
+		return;
+	}
+	int i=0;
+	char temp[80];
+	f1.getline(temp,80);
+	while(f1)
+	{
+		i++;
+		if(i!=t)
+		{
+		    f2<<temp<<"\n";
+		}
+		f1.getline(temp,80);
+	}
+	f1.close();
+	f2.close();
+	remove("c:/creeper/sys/File/list");
+	rename("c:/creeper/sys/File/temp","c:/creeper/sys/File/list");
+
+       fstream f3("c:/creeper/sys/File/total",ios::in);
+	int g;
+	f3>>g;
+	g--;
+	f3.close();
+	f3.open("c:/creeper/sys/File/total",ios::out);
+	f3<<g;
+	f3.close();
+	clrscr();
+	gotoxy(20,20);
+	cout<<"FILE DELETED";
+	delay(500);
+
+
+}
+
+void File::Fileprint(char fnm1[], char fnm[],int t)
+{
+	textbackground(BLACK);
+	textcolor(WHITE);
+	_setcursortype(_NORMALCURSOR);
+	clrscr();
+
+	char ch,s;
+	cout<<"\n\n\t\tARE YOU SURE TO PRINT (Y/N) :";
+	ch=getche();
+
+	if(ch!='y' && ch!='Y')
+	{       cout<<"\n\n\t\tCREEPING ON > > >";
+		delay(800);
+		return;
+	}
+	ifstream f1(fnm1);
+	ofstream f2("PRN");
+	if(!f1 || !f2)
+	{
+		cout<<"\n\n\tERROR WITH FILE HANDLING";
+		delay(800);
+		return;
+	}
+
+	clrscr();
+	cout<<"\n\n\t\tPLEASE IF PRINTER IN CONNECTED AND TURNED ON";
+	delay(1000);
+	clrscr();
+	cout<<"\n\n\n\t\tPRINTING . . .";
+
+	f1.get(s);
+	while(f1)
+	{
+		f2<<s;
+		f1.get(s);
+	}
+	f1.close();
+	f2.close();
+	delay(5000);
+	clrscr();
+	cout<<"IF YOU DID NOT GET YOUR HARD COPY...PLEASE CONTATCT TECHNICAL EXPERT";
+	delay(5000);
+}
+
+
+
+
+
+
